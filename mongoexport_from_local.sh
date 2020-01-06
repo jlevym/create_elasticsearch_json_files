@@ -1,19 +1,55 @@
 #!/bin/bash
 
+set -e
+
 sudo service mongodb start
 
 mongorestore --drop -d lergo-test dump/lergo-production
 
+sleep 10 &
+wait $!
+echo ""
+echo mongorestore completed
+echo ""
+
+echo ""
+echo start updating lessons with username.. this may take some take a bit
+echo ""
+sleep 10 &
+wait $!
+mongo localhost:27017/lergo-test add_username_to_lessons.js
+echo ""
+echo lessons update completed
+echo""
+
+echo ""
+echo start updating questions with username.. this may take some take a bit
+echo ""
+sleep 10 &
+wait $!
+mongo localhost:27017/lergo-test add_username_to_questions.js
+echo ""
+echo database update completed
+echo""
+
+
+
+
 for collection in users questions lessons reports
 do
           mongoexport -d lergo-test -c $collection -o $collection.json
-          echo exported $collection
           echo ""
-          sleep 120
+          echo finished exporting $collection
+          echo ""
+          echo sleep  30 secs
+          sleep 30
 done
-sleep 60 &
+
+echo ""
+echo "sleep 30 secconds and then we are done"
+sleep 30 &
 wait $!
 
 echo ""
-echo all collections inserted into elasticsearch
+echo "all exported collections are now available in this folder"
 echo ""
