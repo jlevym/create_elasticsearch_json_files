@@ -53,3 +53,7 @@ wait $!
 echo ""
 echo "all exported collections are now available in this folder"
 echo ""
+
+echo ""
+echo "to now add these files to elasticsearch, run ~/dev_serverless/docker-elk/logstash$ time ./all_install_json.sh "
+echo ""
